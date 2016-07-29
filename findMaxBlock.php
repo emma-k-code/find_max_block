@@ -1,11 +1,4 @@
 <?php
-// 1.使用foreach將$check陣列全部搜尋一遍 並把已搜尋過的都改為0
-// 2.當搜尋到1時 將其座標存入$haveOne 相鄰的座標存入$needFind中
-// 3.再使用foreach 搜尋$needFind中座標的相鄰座標 並將以搜尋的座標從$needFind中刪除
-// 4.重複2跟3直到$needFind中已沒有座標
-// 5.將$haveOne中所存的座標數量與$big比對 當$haveOne>$big時 $big = $haveOne
-// 6.依$big中的座標 將$check中相應的座標改為1
-// 7.用foreach輸出$check的內容
 $origin = array(
         array(1, 1, 0, 0, 0, 0, 0, 0, 0, 0),
         array(1, 1, 0, 1, 1, 0, 0, 0, 0, 0),
@@ -34,10 +27,11 @@ $origin = array(
            
             // 判斷此區域所含有的1 是否多於目前最大的區域數量
             if (sizeof($haveOne)>sizeof($big[0])) {
+                // 將原儲存的資料刪除
                 unset($big);
                 $big[] = $haveOne;
             }elseif (sizeof($haveOne) == sizeof($big[0])) {
-                $big[] = $haveOne;
+                $big[] = $haveOne; 
             }
         }
         
