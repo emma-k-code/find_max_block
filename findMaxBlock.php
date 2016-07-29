@@ -32,37 +32,26 @@ $origin = array(
             $check[$y][$x] = "0"; // 將找過的都改為0
             
             // 判斷此區域所含有的1 是否多於目前最大的區域數量
-            if (sizeof($haveOne)>=sizeof($big)) {
-                $big[] = $haveOne;
-                foreach ($big as $key=>$value) {
-                    if (sizeof($big[$key])<sizeof($haveOne)) {
-                        unset($big[$key]);
-                    }
-                }
+            if (sizeof($haveOne)>sizeof($big)) {
+                $big = $haveOne;
             }
         }
         
     }
-    $i = 0;
+    
     // 將最大的相鄰區塊的座標填上1
     foreach ($big as $value) {
-        $output[$i] = $check;
-        foreach ($value as $xy) {
-            $bigY = $xy[0];
-            $bigX = $xy[1];
-            $output[$i][$bigY][$bigX] = 1;
-        }
-        $i++;
+        $bigY = $value[0];
+        $bigX = $value[1];
+        $check[$bigY][$bigX] = 1;
     }
     
     // 輸出結果
-    foreach ($output as $print) {
-        foreach ($print as $column) {
-            foreach ($column as $n) {
-                echo $n;
-            }
-            echo "<br>";
+    foreach ($check as $column) {
+        foreach ($column as $n) {
+            echo $n;
         }
+        echo "<br>";
     }
     
     function find($y,$x,$needFind=array()) {
@@ -92,6 +81,7 @@ $origin = array(
             unset($needFind[$key]); // 將找過的座標刪除
             find($findY,$findX,$needFind); // 搜尋該座標的相鄰區域
         }
+        
         
     }
     
