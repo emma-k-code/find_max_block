@@ -25,15 +25,19 @@ $origin = array(
     foreach ($check as $y=>$column) {
         foreach ($column as $x=>$n) {
             $haveOne = array(); // 儲存相鄰的1的座標
+            $needFind = array();
             if ($n==1) {
+                $check[$y][$x] = "0"; // 將找過的都改為0
                 $haveOne[] = array($y,$x);
                 find($y,$x); // 搜尋相鄰區域
             }
-            $check[$y][$x] = "0"; // 將找過的都改為0
-            
+           
             // 判斷此區域所含有的1 是否多於目前最大的區域數量
-            if (sizeof($haveOne)>sizeof($big)) {
-                $big = $haveOne;
+            if (sizeof($haveOne)>sizeof($big[0])) {
+                unset($big);
+                $big[] = $haveOne;
+            }elseif (sizeof($haveOne) == sizeof($big[0])) {
+                $big[] = $haveOne;
             }
         }
         
@@ -41,22 +45,29 @@ $origin = array(
     
     // 將最大的相鄰區塊的座標填上1
     foreach ($big as $value) {
-        $bigY = $value[0];
-        $bigX = $value[1];
-        $check[$bigY][$bigX] = 1;
-    }
-    
-    // 輸出結果
-    foreach ($check as $column) {
-        foreach ($column as $n) {
-            echo $n;
+        $output = $check;
+        foreach ($value as $xy) {
+            $bigY = $xy[0];
+            $bigX = $xy[1];
+            $output[$bigY][$bigX] = 1;
         }
-        echo "<br>";
+        
+        // 輸出結果
+        foreach ($output as $column) {
+            foreach ($column as $n) {
+                echo $n;
+            }
+            echo "<br>";
+        }
+        
+        echo "<hr>";
     }
     
-    function find($y,$x,$needFind=array()) {
+    function find($y,$x) {
         global $check;
         global $haveOne;
+        global $needFind;
+        global $i;
         // 加入要搜尋的右下左上的座標
         if ($check[$y][$x+1] == 1) {
             $needFind[] = array($y,$x+1); // 右
@@ -76,12 +87,13 @@ $origin = array(
             $findY = $value[0];
             $findX = $value[1];
             
+            if ($check[$findY][$findX]==1) {
+                $haveOne[] = array($findY,$findX);
+            }
             $check[$findY][$findX] = "0";
-            $haveOne[] = array($findY,$findX);
             unset($needFind[$key]); // 將找過的座標刪除
-            find($findY,$findX,$needFind); // 搜尋該座標的相鄰區域
+            find($findY,$findX); // 搜尋該座標的相鄰區域
         }
-        
         
     }
     
