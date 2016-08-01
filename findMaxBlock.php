@@ -13,7 +13,7 @@ $origin = array(
         array(1, 1, 0, 1, 1, 0, 0, 0, 0, 1)
     );
     
-    $big = array(); // 相鄰最多1的座標
+    $shape = array(); // 儲存相鄰的1的形狀
     $check = $origin; // 將原始陣列存入$check
     
     foreach ($check as $y=>$column) {
@@ -24,26 +24,31 @@ $origin = array(
                 $haveOne[] = array($y,$x);
                 find($y,$x); // 搜尋相鄰區域
             }
-           
-            // 判斷此區域所含有的1 是否多於目前最大的區域數量
-            if (sizeof($haveOne)>sizeof($big[0])) {
-                // 將原儲存的資料刪除
-                unset($big);
-                $big[] = $haveOne;
-            }elseif (sizeof($haveOne) == sizeof($big[0])) {
-                $big[] = $haveOne; 
+            
+            if (sizeof($haveOne)>1) {
+                $shape[] = $haveOne; 
             }
+            
         }
         
     }
     
+    // 搜尋最大面積
+    $big = 0;
+    foreach ($shape as $value) {
+        $big = (sizeof($value) > $big)? sizeof($value):$big;
+    }
+    
     // 將最大的相鄰區塊的座標填上1
-    foreach ($big as $value) {
+    foreach ($shape as $value) {
+        if (sizeof($value)!=$big)
+            continue;
+        
         $output = $check;
         foreach ($value as $xy) {
-            $bigY = $xy[0];
-            $bigX = $xy[1];
-            $output[$bigY][$bigX] = 1;
+            $shapeY = $xy[0];
+            $shapeX = $xy[1];
+            $output[$shapeY][$shapeX] = 1;
         }
         
         // 輸出結果
