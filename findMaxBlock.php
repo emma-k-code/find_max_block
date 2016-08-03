@@ -1,24 +1,21 @@
 <?php
 class findMaxBlock {
     private $check;
-    private $needFind;
-    private $haveOne;
-    private $shape;
+    private $needFind; // 儲存欲搜尋的座標
+    private $haveOne; // 儲存為1的座標
+    private $shape;  // 儲存搜尋完成的區域
     
     public function checkShape($origin) {
         $this->check = $origin;
         
         foreach ($this->check as $y=>$column) {
             foreach ($column as $x=>$n) {
-                $this->haveOne = array(); // 儲存為1的座標
+                $this->haveOne = array();
                 $this->needFind = array();
-                if ($n==1) {
+                if ($this->check[$y][$x]==1) {
                     $this->haveOne[] = array($y,$x);
                     $this->find($y,$x); // 搜尋相鄰區域
-                }
-                
-                if (sizeof($this->haveOne)>1) {
-                    $this->shape[] = $this->haveOne; 
+                    $this->shape[] = $this->haveOne;  // 將搜尋結果儲存
                 }
                 
             }
@@ -36,11 +33,13 @@ class findMaxBlock {
             $big = (sizeof($value) > $big)? sizeof($value):$big;
         }
         
-        // 將最大的相鄰區塊的座標填上1
+        // 顯示結果
         foreach ($shape as $value) {
+            // 只顯示最大區域
             if (sizeof($value)!=$big)
                 continue;
             
+            // 將相應座標填上1
             $output = $check;
             foreach ($value as $xy) {
                 $shapeY = $xy[0];
@@ -77,6 +76,7 @@ class findMaxBlock {
             unset($this->needFind[$key]); // 將找過的座標刪除
             if ($this->check[$findY][$findX]==1) {
                 $this->haveOne[] = array($findY,$findX);
+                $this->check[$y][$x] = 0 ; // 將找過的改為0
                 $this->find($findY,$findX); // 搜尋該座標的相鄰區域
             }
             
